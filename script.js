@@ -516,6 +516,8 @@ const handleDisconnect = () => {
     if (peerConnection.iceConnectionState !== "closed" && peerConnection.iceConnectionState !== "failed") {
         peerConnection.close();
     }
+    // after closing the connection, check it again if it is already closed
+    checkConnection();
 }
 
 const handleStartVideo = () => {
