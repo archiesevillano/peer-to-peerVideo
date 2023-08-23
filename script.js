@@ -1,6 +1,12 @@
 'use strict';
 
-const mediaStreamConstraints = { video: true };
+const mediaStreamConstraints = {
+    video: {
+        width: { min: 640, ideal: 1920, max: 1920 },
+        height: { min: 480, ideal: 1080, max: 1080 }
+    },
+    audio: true
+};
 const offerOptions = { offerToReceiveVideo: 1 };
 const servers = { 'iceServers': [{ 'url': 'stun:stun.l.google.com:19302' }] };
 
@@ -458,7 +464,7 @@ const handleToggles = componentName => {
 const handleShareCamera = async () => {
     try {
         // get the video media stream
-        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const mediaStream = await navigator.mediaDevices.getUserMedia(mediaStreamConstraints);
         const audioTracks = mediaStream.getAudioTracks();
 
         // enabled echo cancellation
