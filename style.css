@@ -1,0 +1,522 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --fnt: 'Poppins', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #202020;
+}
+
+.subCaption {
+    font-family: var(--fnt);
+    color: #f2f2f2;
+    font-size: 2rem;
+    display: inline-block;
+    text-align: center;
+    padding: 0 50px;
+}
+
+.appHeader {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 35px 20px;
+
+}
+
+.splashScreen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.startScreenBtns {
+    display: flex;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.stBtns {
+    font-family: var(--fnt);
+    padding: 5px 7px;
+    width: 150px;
+    font-size: 1rem;
+    background: none;
+    border-style: solid;
+    border-radius: 10px;
+    border-color: #f2f2f2;
+    color: #f2f2f2;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+}
+
+.stBtns i {
+    margin-right: 6px;
+}
+
+.stBtns::before {
+    content: '';
+    background: #0c96e6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: all 0.5s ease-in-out;
+}
+
+.stBtns:first-child::before {
+    transform-origin: right;
+}
+
+.stBtns:hover {
+    border-color: #0c96e6;
+}
+
+.stBtns:hover::before {
+    transform: scaleX(1);
+}
+
+.p2pTitle {
+    font-size: 1.3rem;
+    font-family: var(--fnt);
+    color: rgb(114, 162, 226);
+    text-align: center;
+}
+
+.cameraVideo {
+    /* style for the video screen */
+    height: 400px;
+    width: 100%;
+    background: rgb(15, 15, 15);
+}
+
+.screenVideo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    width: 50%;
+    border-radius: 10px;
+    border: 3px solid white;
+}
+
+.videoArea {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.videoGrid {
+    /* section that contains the local and remote videos */
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    justify-items: center;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+}
+
+.localCamera {
+    width: 100%;
+    height: 100%;
+}
+
+.mediaOverlay {
+    position: absolute;
+    z-index: 1;
+    background: transparent;
+    background: linear-gradient(180deg, transparent 0%, rgba(2, 0, 36, 1) 87%);
+    transition: all 0.3s ease-in-out;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 40px;
+}
+
+.mediaOverlay:hover {
+    opacity: 0.8;
+}
+
+.mediaBtnGroup {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.screenBtns {
+    width: 35px;
+    height: 35px;
+    position: relative;
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+    background-color: #0c96e6;
+}
+
+.screenBtns i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    color: #f2f2f2;
+}
+
+/* Screenshare Btn */
+
+.screenBtns.screenShare:hover::after,
+.screenBtns.screenShare:hover::before {
+    opacity: 1;
+}
+
+.screenBtns.screenShare::after {
+    content: 'Screenshare';
+    opacity: 0;
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    z-index: 1;
+    color: white;
+    background-color: #111111;
+    padding: 3px 7px;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+.screenBtns.screenShare::before {
+    opacity: 0;
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #111111;
+    position: absolute;
+    z-index: -1;
+    top: -16px;
+    left: 12px;
+    transform: rotate(45deg);
+    transition: all 0.2s ease-in-out;
+}
+
+
+/* Microphone Button */
+
+.screenBtns.mic:hover::after,
+.screenBtns.mic:hover::before {
+    opacity: 1;
+}
+
+.screenBtns.mic::after {
+    content: 'Microphone';
+    opacity: 0;
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    z-index: 1;
+    color: white;
+    background-color: #111111;
+    padding: 3px 7px;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+.screenBtns.mic::before {
+    opacity: 0;
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #111111;
+    position: absolute;
+    z-index: -1;
+    top: -16px;
+    left: 12px;
+    transform: rotate(45deg);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Camera Button */
+
+.screenBtns.cam:hover::after,
+.screenBtns.cam:hover::before {
+    opacity: 1;
+}
+
+.screenBtns.cam::after {
+    content: 'Camera';
+    opacity: 0;
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    z-index: 1;
+    color: white;
+    background-color: #111111;
+    padding: 3px 7px;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+.screenBtns.cam::before {
+    opacity: 0;
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #111111;
+    position: absolute;
+    z-index: -1;
+    top: -16px;
+    left: 12px;
+    transform: rotate(45deg);
+    transition: all 0.2s ease-in-out;
+}
+
+/* close btn */
+
+.screenBtns.x:hover::after,
+.screenBtns.x:hover::before {
+    opacity: 1;
+}
+
+.screenBtns.x::after {
+    content: 'Disconnect';
+    opacity: 0;
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    z-index: 1;
+    color: white;
+    background-color: #111111;
+    padding: 3px 7px;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+.screenBtns.x::before {
+    opacity: 0;
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #111111;
+    position: absolute;
+    z-index: -1;
+    top: -16px;
+    left: 12px;
+    transform: rotate(45deg);
+    transition: all 0.2s ease-in-out;
+}
+
+.offerSection {
+    width: 100%;
+    max-width: 1000px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.offerItem,
+.answerItem {
+    background: #333;
+    display: none;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    transform: translateY(-100px);
+    animation-name: slideDown;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-delay: 0.2s;
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.sdpLabel {
+    padding: 20px;
+    font-family: var(--fnt);
+    font-weight: 900;
+    font-size: 1.6rem;
+    color: #525252;
+}
+
+.copyOfferBtn,
+.copyAnswerBtn {
+    margin: 20px;
+    padding: 10px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #f2f2f2;
+    position: relative;
+}
+
+.copyOfferBtn:active,
+.copyAnswerBtn:active {
+    color: #a3a3a3;
+}
+
+.localDescription {
+    font-family: var(--fnt);
+    color: #4bb1ec;
+}
+
+.copyOfferBtn i,
+.copyAnswerBtn i {
+    font-size: 1.2rem;
+}
+
+.copyBtnToolTip,
+.copyAnswerBtnToolTip {
+    position: absolute;
+    top: -10px;
+    left: -3px;
+    background-color: #0e0e0e;
+    color: #f2f2f2;
+    transition: all 0.4s ease-in-out;
+    padding: 3px 8px;
+    font-family: var(--fnt);
+    font-size: 0.7rem;
+    border-radius: 5px;
+    z-index: 2;
+    opacity: 0;
+}
+
+.copyBtnToolTip::before,
+.copyAnswerBtnToolTip::before {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    content: '';
+    z-index: -1;
+    background: #0e0e0e;
+    width: 10px;
+    height: 10px;
+    transform: rotate(-45deg) translateX(-50%);
+    transition: all 0.1s ease-in-out;
+}
+
+.copyOfferBtn:hover .copyBtnToolTip,
+.copyAnswerBtn:hover .copyAnswerBtnToolTip {
+    top: -18px;
+    opacity: 1;
+}
+
+#localOffer,
+#localAnswer {
+    display: none;
+}
+
+.clicked {
+    pointer-events: none;
+    user-select: none;
+    opacity: 1;
+    background-color: #3ba74d;
+}
+
+.joinSection {
+    display: none;
+    animation-name: slideDown;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-delay: 0.2s;
+    background-color: #333;
+    max-width: 1000px;
+    min-width: 300px;
+    padding: 20px;
+    border-radius: 10px;
+    opacity: 0;
+}
+
+.openConnectionSection {
+    display: none;
+    animation-name: slideDown;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-delay: 0.2s;
+    background-color: #333;
+    max-width: 1000px;
+    min-width: 300px;
+    padding: 20px;
+    border-radius: 10px;
+    opacity: 0;
+}
+
+.joinSection h2,
+.openConnectionSection h2 {
+    font-family: var(--fnt);
+    color: #f2f2f2;
+    text-align: center;
+    padding: 15px 0 40px;
+}
+
+#remoteOffer,
+#remoteAnswer {
+    padding: 8px 13px;
+    width: 100%;
+    outline: none;
+    border: none;
+    font-size: 0.9rem;
+    font-family: var(--fnt);
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#acceptOffer,
+#acceptAnswer {
+    background-color: #0c96e6;
+    border: none;
+    outline: none;
+    font-family: var(--fnt);
+    color: #f2f2f2;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 0 0;
+    width: 100%;
+}
+
+.instruction {
+    font-family: var(--fnt);
+    color: #f2f2f2;
+    font-size: 0.7rem;
+    opacity: 0.8;
+}

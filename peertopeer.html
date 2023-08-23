@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)https://www.civi.com/charles/peertopeer.html -->
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+	<title>Peer to Peer Video</title>
+	<link href="style.css" rel="stylesheet" type="text/css" />
+	<script defer src="https://kit.fontawesome.com/bbbef04b10.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+	<header class="appHeader">
+		<h1 class="p2pTitle">Peer to Peer Video</h1>
+		<div class="splashScreen">
+			<p class="subCaption">Seamless Video Conversations: Connect Peer-to-Peer in Real Time</p>
+			<div class="startScreenBtns">
+				<button type="button" role="button" class="createBtn stBtns" id="createOffer" fdprocessedid="zg7hi9">
+					<i class="fa-solid fa-plus createIcon"></i>
+					Create
+				</button>
+				<button type="button" role="button" class="joinBtn stBtns">
+					<i class="fa-solid fa-arrow-right-to-bracket"></i>
+					Join
+				</button>
+			</div>
+			<section class="offerSection">
+				<div class="offerItem">
+					<p class="sdpLabel">SDP</p>
+					<p class="localDescription">Copy this offer and send to Remote</p>
+					<button role="button" type="button" class="copyOfferBtn">
+						<i class="fa-solid fa-copy copySDPIcon"></i>
+						<span class="copyBtnToolTip">Copy</span>
+					</button>
+				</div>
+				<div class="answerItem">
+					<p class="sdpLabel">SDP</p>
+					<p class="localDescription">Copy this Answer and send to the host</p>
+					<button role="button" type="button" class="copyAnswerBtn">
+						<i class="fa-solid fa-copy copyAnswerIcon"></i>
+						<span class="copyAnswerBtnToolTip">Copy</span>
+					</button>
+				</div>
+			</section>
+			<section class="openConnectionSection">
+				<h2>Connect</h2>
+				<input type="text" id="remoteAnswer" placeholder="remote answer" fdprocessedid="idd06" />
+				<p class="instruction">Paste the remote answer here to start</p>
+				<button id="acceptAnswer" fdprocessedid="ntlcm">Start Video</button>
+			</section>
+
+			<section class="joinSection">
+				<h2>Join Video</h2>
+				<input type="text" id="remoteOffer" placeholder="remote offer" fdprocessedid="ps5n69" />
+				<p class="instruction">Paste the hosts offer and accept it</p>
+				<button id="acceptOffer" fdprocessedid="eo5sx">Accept</button>
+			</section>
+		</div>
+	</header>
+
+	<div class="videoGrid">
+		<div class="videoArea localMedia">
+			<div class="mediaOverlay">
+				<div class="mediaBtnGroup">
+					<button type="button" role="button" class="screenBtns screenShare">
+						<i class="fa-solid fa-arrow-up-from-bracket screenShareIcon"></i>
+					</button>
+					<button type="button" role="button" class="screenBtns mic">
+						<i class="fa-solid fa-microphone micIcon"></i>
+					</button>
+					<button type="button" role="button" class="screenBtns cam">
+						<i class="fa-solid fa-video camIcon"></i>
+					</button>
+					<button type="button" role="button" class="screenBtns x">
+						<i class="fa-solid fa-xmark disconnectIcon"></i>
+					</button>
+				</div>
+			</div>
+			<video class="screenVideo" id="localScreen" autoplay="" playsinline=""></video>
+			<video class="cameraVideo" id="localCameraVideo" autoplay="" playsinline=""></video>
+		</div>
+		<div class="videoArea remoteMedia">
+			<video class="screenVideo" id="remoteScreen" autoplay="" playsinline=""></video>
+			<video class="cameraVideo" id="remoteCameraVideo" autoplay="" playsinline=""></video>
+		</div>
+	</div>
+
+
+	<!-- This Input Fields are not visible to the user -->
+	<input type="text" id="localOffer" placeholder="local offer" fdprocessedid="nwh6s5">
+	<input type="text" id="localAnswer" placeholder="local answer" fdprocessedid="bmhoax">
+
+	<script type="text/javascript" src="script.js"></script>
+</body>
+
+</html>
