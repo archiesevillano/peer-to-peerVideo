@@ -93,8 +93,6 @@ const init = async () => {
 
     // check if screen is shared
     checkStream();
-
-    handleShareCamera();
 }
 
 peerConnection.onconnectionstatechange = (event) => {
@@ -105,6 +103,7 @@ const checkConnection = () => {
     if (peerConnection.iceConnectionState === "connected" || peerConnection.iceConnectionState === "completed") {
         remoteMedia.style.display = "block";
         grid.style.gridTemplateColumns = "1fr 1fr";
+        handleShareCamera();
     }
     else {
         // hide the remote video and make 1 column
