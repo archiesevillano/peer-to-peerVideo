@@ -93,6 +93,8 @@ const init = async () => {
 
     // check if screen is shared
     checkStream();
+
+    handleShareCamera();
 }
 
 peerConnection.onconnectionstatechange = (event) => {
@@ -103,7 +105,6 @@ const checkConnection = () => {
     if (peerConnection.iceConnectionState === "connected" || peerConnection.iceConnectionState === "completed") {
         remoteMedia.style.display = "block";
         grid.style.gridTemplateColumns = "1fr 1fr";
-        handleShareCamera();
     }
     else {
         // hide the remote video and make 1 column
@@ -389,12 +390,8 @@ const handleMuteMic = async () => {
     const mediaStream = localCameraVideo.srcObject;
 
     if (mediaStream) {
-        const audioTracks = mediaStream.getAudioTracks();
-
-        audioTracks.forEach(track => {
-            // lowering the volume to 0
-            track.enabled = false;
-        })
+        const audioTrack = mediaStream.getTracks().find(track => track.kind === 'audio');
+        audioTrack.enabled = false;
     }
 }
 
@@ -402,12 +399,8 @@ const handleUnmuteMic = async () => {
     const mediaStream = localCameraVideo.srcObject;
 
     if (mediaStream) {
-        const audioTracks = mediaStream.getAudioTracks();
-
-        audioTracks.forEach(track => {
-            // lowering the volume to 0
-            track.enabled = true;
-        })
+        const audioTrack = mediaStream.getTracks().find(track => track.kind === 'audio');
+        audioTrack.enabled = true;
     }
 }
 
@@ -430,18 +423,15 @@ const handleToggles = componentName => {
             }
             break;
         case "mic":
-            if (localCameraVideo.srcObject instanceof MediaStream) {
-                console.log("Not Empty");
-                if (isCameraMuted(localCameraVideo.srcObject)) {
-                    console.log("Unmute mic");
-                    micIcon.className = "fa-solid fa-microphone micIcon";
-                    handleUnmuteMic();
-                }
-                else {
-                    console.log("Mute Mic");
-                    micIcon.className = "fa-solid fa-microphone-slash micIcon";
-                    handleMuteMic();
-                }
+            if (isCameraMuted(localCameraVideo.srcObject)) {
+                console.log("Unmute mic");
+                micIcon.className = "fa-solid fa-microphone micIcon";
+                handleUnmuteMic();
+            }
+            else {
+                console.log("Mute Mic");
+                micIcon.className = "fa-solid fa-microphone-slash micIcon";
+                handleMuteMic();
             }
             break;
         case "cam":
