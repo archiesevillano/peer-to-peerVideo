@@ -68,8 +68,8 @@ const openConnectionSection = document.querySelector(".openConnectionSection");
 const peerConnection = new RTCPeerConnection(servers);
 console.log('Created peer connection');
 
-const peerMediaStream = new MediaStream();
-peerConnection.addStream(peerMediaStream);
+const localCameraStream = new MediaStream();
+const localScreenStream = new MediaStream();
 
 const init = async () => {
 
@@ -89,7 +89,7 @@ const init = async () => {
     acceptAnswer.addEventListener('click', answerAccept);
 
     peerConnection.addEventListener('icecandidate', handleConnection);
-    peerConnection.addEventListener('addstream', gotRemoteMediaStream);
+    peerConnection.addEventListener('track', gotRemoteMediaStream);
 
     // check if screen is shared
     checkStream();
@@ -242,20 +242,22 @@ const handleShowJoin = () => {
 }
 
 const gotRemoteMediaStream = (event) => {
-    console.log(event);
-    const mediaStream = event.stream;
-
-    //console.log('remote peer connection received remote stream');
+    console.log("new Track Added!");
+    console.log(event.streams);
+    const mediaStream = event.streams[0];
+    mediaStream.getTracks().some(track => console.log(track));
 
     if (mediaStream.getTracks().some(track => track.kind === "video")) {
         remoteCameraVideo.srcObject = mediaStream;
     }
-    else if (mediaStream.getTracks().some(track => track.kind === "screen")) {
-        remoteScreenVideo.srcObject = mediaStream;
-    }
     else {
         console.log(track.kind);
     }
+
+    // if (mediaStream.getTracks().some(track => track.label.contains("screen"))) {
+    //     remoteScreenVideo.srcObject = mediaStream;
+    // }
+    // else 
 }
 
 const offerCreate = async () => {
@@ -336,12 +338,15 @@ const answerAccept = async () => {
 }
 
 const handleShareScreen = async () => {
+
     try {
         // get user's screen video
-        const mediaStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+        const mediaStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "always" }, audio: true });
+
         localScreenVideo.srcObject = mediaStream;
         for (const track of mediaStream.getTracks()) {
-            peerMediaStream.addTrack(track);
+            // setting up the track label name so we can then identify the source of the track in remote side
+            peerConnection.addTrack(track, localScreenStream);
         }
 
         // check shared screen
@@ -454,6 +459,7 @@ const handleShareCamera = async () => {
     try {
         // get the video media stream
         const mediaStream = await navigator.mediaDevices.getUserMedia(mediaStreamConstraints);
+        mediaStream.getTracks().forEach(track => console.log(track.label));
         const audioTracks = mediaStream.getAudioTracks();
 
         // enabled echo cancellation
@@ -476,7 +482,8 @@ const handleShareCamera = async () => {
         localCameraVideo.srcObject = mediaStream;
 
         for (const track of mediaStream.getTracks()) {
-            peerMediaStream.addTrack(track);
+            // setting up the track label name so we can then identify the source of the track in remote side
+            peerConnection.addTrack(track, localCameraStream);
         }
 
     }
