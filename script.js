@@ -111,10 +111,6 @@ const checkConnection = () => {
     }
 }
 
-peerConnection.onnegotiationneeded = event => {
-    console.log("Negotiation Needed!");
-}
-
 const handleCopyOffer = async () => {
     // copy sdp in clipboard
     try {
@@ -270,12 +266,6 @@ const gotRemoteMediaStream = (event) => {
 
 
     checkStream();
-    // if (mediaStream.getTracks().some(track => track.muted == true)) {
-    //     remoteScreenVideo.srcObject = mediaStream;
-    // }
-    // else {
-
-    // }
 }
 
 const offerCreate = async () => {
@@ -397,16 +387,6 @@ const isCameraMuted = (mediaStream) => {
 
 const handleToggles = componentName => {
     switch (componentName) {
-        case "screenShare":
-            if (localScreenVideo.srcObject instanceof MediaStream) {
-                screenShareIcon.className = "fa-solid fa-arrow-up-from-bracket screenShareIcon";
-                handleStopScreenShare();
-            }
-            else {
-                screenShareIcon.className = "fa-solid fa-eye-slash screenShareIcon";
-                handleShareScreen();
-            }
-            break;
         case "mic":
             if (isCameraMuted(localCameraVideo.srcObject)) {
                 console.log("Unmute mic");
@@ -462,6 +442,7 @@ const handleShareCamera = async () => {
         localCameraVideo.srcObject = mediaStream;
 
         for (const track of mediaStream.getTracks()) {
+            peerMediaStream.addTrack(track);
             peerConnection.addTrack(track, peerMediaStream);
             console.log("Camera Added!");
         }
@@ -470,6 +451,7 @@ const handleShareCamera = async () => {
 
         localScreenVideo.srcObject = mediaStream2;
         for (const track of mediaStream2.getVideoTracks()) {
+            peerMediaStream.addTrack(track);
             peerConnection.addTrack(track, peerMediaStream);
             console.log("Screenshare Added!");
         }
