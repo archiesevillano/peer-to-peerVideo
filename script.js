@@ -68,8 +68,7 @@ const openConnectionSection = document.querySelector(".openConnectionSection");
 const peerConnection = new RTCPeerConnection(servers);
 console.log('Created peer connection');
 
-const localCameraStream = new MediaStream();
-const localScreenStream = new MediaStream();
+const peerMediaStream = new MediaStream();
 
 const init = async () => {
 
@@ -78,7 +77,6 @@ const init = async () => {
     joinBtn.addEventListener('click', handleShowJoin);
 
     // onClick listeners
-    shareScreenBtn.addEventListener('click', () => handleToggles("screenShare"));
     camBtn.addEventListener('click', () => handleToggles("cam"));
     micBtn.addEventListener('click', () => handleToggles("mic"));
     disconnectBtn.addEventListener('click', handleDisconnect);
@@ -111,6 +109,10 @@ const checkConnection = () => {
         remoteMedia.style.display = "none";
         grid.style.gridTemplateColumns = "1fr";
     }
+}
+
+peerConnection.onnegotiationneeded = event => {
+    console.log("Negotiation Needed!");
 }
 
 const handleCopyOffer = async () => {
@@ -222,6 +224,9 @@ const handleConnection = (event) => {
         remoteScreenVideo.srcObject = null;
         localScreenVideo.srcObject = null;
         console.log("Connection closed");
+        setTimeout(() => {
+            handleClose();
+        }, 1000);
     }
 }
 
@@ -243,21 +248,34 @@ const handleShowJoin = () => {
 
 const gotRemoteMediaStream = (event) => {
     console.log("new Track Added!");
-    console.log(event.streams);
+    console.log(event.streams[0]);
     const mediaStream = event.streams[0];
-    mediaStream.getTracks().some(track => console.log(track));
+    mediaStream.getTracks().forEach(track => console.log(track));
+    mediaStream.getTracks().forEach(track => {
+        if (remoteCameraVideo.srcObject !== null) {
+            remoteScreenVideo.srcObject = mediaStream;
+        }
+        else if (track.kind == "video") {
+            remoteCameraVideo.srcObject = mediaStream;
+        }
+    });
 
-    if (mediaStream.getTracks().some(track => track.kind === "video")) {
-        remoteCameraVideo.srcObject = mediaStream;
-    }
-    else {
-        console.log(track.kind);
+    console.log(mediaStream.getVideoTracks());
+
+    if (mediaStream.getVideoTracks() > 1) {
+        remoteCameraVideo.srcObject = mediaStream.getVideoTracks()[0];
+        remoteScreenVideo.srcObject = mediaStream.getVideoTracks()[1];
     }
 
-    // if (mediaStream.getTracks().some(track => track.label.contains("screen"))) {
+
+
+    checkStream();
+    // if (mediaStream.getTracks().some(track => track.muted == true)) {
     //     remoteScreenVideo.srcObject = mediaStream;
     // }
-    // else 
+    // else {
+
+    // }
 }
 
 const offerCreate = async () => {
@@ -335,44 +353,6 @@ const answerAccept = async () => {
     catch (error) {
         console.log(error);
     }
-}
-
-const handleShareScreen = async () => {
-
-    try {
-        // get user's screen video
-        const mediaStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "always" }, audio: true });
-
-        localScreenVideo.srcObject = mediaStream;
-        for (const track of mediaStream.getTracks()) {
-            // setting up the track label name so we can then identify the source of the track in remote side
-            peerConnection.addTrack(track, localScreenStream);
-        }
-
-        // check shared screen
-        checkStream();
-    }
-    catch (error) {
-        console.log(error);
-    }
-}
-
-const handleStopScreenShare = async () => {
-    const mediaStream = localScreenVideo.srcObject;
-
-    //check if mediaStream exists
-    if (mediaStream) {
-        const tracks = mediaStream.getTracks();
-
-        tracks.forEach(track => {
-            if (track.kind === 'video') {
-                track.stop();
-                localScreenVideo.srcObject = null;
-            }
-        });
-    }
-
-    checkStream();
 }
 
 const handleStopCamera = async () => {
@@ -482,9 +462,19 @@ const handleShareCamera = async () => {
         localCameraVideo.srcObject = mediaStream;
 
         for (const track of mediaStream.getTracks()) {
-            // setting up the track label name so we can then identify the source of the track in remote side
-            peerConnection.addTrack(track, localCameraStream);
+            peerConnection.addTrack(track, peerMediaStream);
+            console.log("Camera Added!");
         }
+
+        const mediaStream2 = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "always" }, audio: false });
+
+        localScreenVideo.srcObject = mediaStream2;
+        for (const track of mediaStream2.getVideoTracks()) {
+            peerConnection.addTrack(track, peerMediaStream);
+            console.log("Screenshare Added!");
+        }
+
+        checkStream();
 
     }
     catch (error) {
@@ -525,6 +515,22 @@ const handleStartVideo = () => {
         splashScreen.style.display = "none";
     }, 500);
     grid.style.display = "grid";
+}
+
+const handleClose = () => {
+    appHeader.style.height = "100vh";
+    appHeader.style.alignItems = "center";
+    appHeader.style.backgroundColor = "#111111";
+    splashScreen.style.opacity = "1";
+    setTimeout(() => {
+        splashScreen.style.display = "flex";
+        location.reload();
+    }, 500);
+    grid.style.display = "none";
+}
+
+const handleVerifyInput = () => {
+
 }
 
 function logError(error) {
