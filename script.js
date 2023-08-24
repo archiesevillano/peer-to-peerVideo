@@ -528,7 +528,7 @@ init();
 // NOTE:
 
 // The problem is coming from the MediaStreamTrack. Multiple video tracks are being added one for LocalScreen and one for LocalCamera.
-// But when accessing it via remoteStream, it seems like there's no LocalScreen track added in the stream. I have researched about it but there's just less resources about WebRTC online.
+// But when accessing it via remoteStream, it seems like there's no LocalScreen track added in the stream. I have researched about it but there's just less resource about WebRTC online.
 // I am still working with it by reading the documentation.
 
 // Second issue is the existing methods or feature here that I modified has been tagged as 'deprecated' or no longer recommended to use
